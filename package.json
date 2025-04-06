@@ -1,0 +1,53 @@
+{
+	"name": "zod-compiler",
+	"version": "0.1.0",
+	"description": "Compile Zod schemas to fast parsers or TypeScript types",
+	"author": "Carson M. <carson@pyke.io>",
+	"license": "MIT OR Apache-2.0",
+	"keywords": [ "zod", "accelerator", "fast", "schema", "validation", "validator" ],
+	"files": [ "dist" ],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pykeio/zod-compiler"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs"
+		},
+		"./standalone": {
+			"types": "./dist/standalone.d.ts",
+			"require": "./dist/standalone.js",
+			"import": "./dist/standalone.mjs"
+		}
+	},
+	"scripts": {
+		"prepublishOnly": "npm run build",
+		"build": "bunchee",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@swc/helpers": "^0.5.15"
+	},
+	"peerDependencies": {
+		"typescript": "^5",
+		"zod": "^3"
+	},
+	"devDependencies": {
+		"@types/node": "^22.14.0",
+		"bunchee": "^6.5.0",
+		"typescript": "^5.8.2",
+		"vitest": "^3.0.9",
+		"zod": "^3.24.2"
+	},
+	"packageManager": "pnpm@10.6.5",
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@swc/core"
+		]
+	}
+}

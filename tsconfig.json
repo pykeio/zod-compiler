@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "stripInternal": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src"
+  ]
+}
