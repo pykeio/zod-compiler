@@ -1,0 +1,29 @@
+name: 🧪 Tests
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/test.yml'
+      - 'src/**/*.ts'
+      - 'tests/**/*.ts'
+      - 'package.json'
+      - 'vitest.config.ts'
+  pull_request:
+    paths:
+      - '.github/workflows/test.yml'
+      - 'src/**/*.ts'
+      - 'tests/**/*.ts'
+      - 'package.json'
+      - 'vitest.config.ts'
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23.x'
+      - run: npm i
+      - run: npm test
