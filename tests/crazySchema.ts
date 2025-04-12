@@ -1,7 +1,6 @@
 import * as z from "zod";
-import * as zc from '../src/index.ts';
 
-export const crazySchema = zc.compile(z.object({
+export const crazySchema = z.object({
   tuple: z.tuple([
     z.string().nullable().optional(),
     z.number().nullable().optional(),
@@ -24,4 +23,4 @@ export const crazySchema = zc.compile(z.object({
   ),
   enum: z.intersection(z.enum(["zero", "one"]), z.enum(["one", "two"])),
   nonstrict: z.object({ points: z.number() }).nonstrict(),
-}));
+});

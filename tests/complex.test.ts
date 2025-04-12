@@ -1,11 +1,11 @@
 // @ts-ignore TS6133
 import { expect, test } from "vitest";
 
-import { crazySchema } from "./crazySchema";
-// import * as z from "../index";
+import { crazySchema } from "./crazySchema.ts";
+import * as zc from '../src/index.ts';
 
 test("parse", () => {
-  crazySchema.parse({
+  zc.compile(crazySchema).parse({
     tuple: ["asdf", 1234, true, null, undefined, "1234"],
     merged: { k1: "asdf", k2: 12 },
     union: ["asdf", 12, "asdf", 12, "asdf", 12],
