@@ -1,7 +1,8 @@
 import { ZcError, ZcIssueCode, type ZcErrorMap, type ZcIssue } from './runtime/error.ts';
-import { defaultErrorMap, getErrorMap, setErrorMap } from './runtime/errorMap.ts';
+import { defaultErrorMap, getErrorMap } from './runtime/errorMap.ts';
 import helpers from './runtime/helpers.ts';
 import * as regex from './runtime/regex.ts';
+import type { StandardSchemaV1, StandardSchemaV1FailureResult, StandardSchemaV1Props, StandardSchemaV1SuccessResult } from './standardSchema.ts';
 
 export type * from './runtime/error.ts';
 export * from './runtime/errorMap.ts';
@@ -43,7 +44,7 @@ export interface ParseParams {
 	errorMap?: ZcErrorMap;
 }
 
-export interface CompiledParser<T> {
+export interface CompiledParser<T> extends StandardSchemaV1<unknown, T> {
 	parse(data: unknown, params?: ParseParams): T;
 	safeParse(data: unknown, params?: ParseParams): SafeParseSuccess<T> | SafeParseError<T>;
 }
@@ -113,6 +114,20 @@ export default function standalone<T>(
 			} else {
 				return { success: false, error: new ZcError(ctx.issues) } as SafeParseError<T>;
 			}
-		}
+		},
+		'~standard': Object.freeze({
+			version: 1,
+			vendor: 'zod-compiler',
+			validate(value) {
+				const ctx = createContext<T>(dependencies, undefined);
+
+				const status = typedParser(value, ctx);
+				if (status === ParseStatus.VALID) {
+					return { value: ctx.output! } satisfies StandardSchemaV1SuccessResult<T>;
+				} else {
+					return { issues: ctx.issues } as StandardSchemaV1FailureResult;
+				}
+			}
+		} satisfies StandardSchemaV1Props<unknown, T>)
 	};
 }
