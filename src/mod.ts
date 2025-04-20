@@ -71,6 +71,10 @@ export interface StandaloneOutput {
 	readonly hasDependencies: boolean;
 }
 
+export interface CompiledNonStandaloneParser<TZod extends z.ZodTypeAny> extends CompiledParser<TZod['_output']> {
+	schema: TZod;
+}
+
 /**
  * Compile a Zod schema for use out-of-source.
  * 
@@ -105,9 +109,9 @@ export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options: Compil
  * console.log(fastSchema.safeParse('Hello, world!')); // { success: true, data: ... }
  * ```
  */
-export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<false>): CompiledParser<TZod['_output']>;
-export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<boolean>): StandaloneOutput | CompiledParser<TZod['_output']>;
-export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<boolean>): StandaloneOutput | CompiledParser<TZod['_output']> {
+export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<false>): CompiledNonStandaloneParser<TZod>;
+export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<boolean>): StandaloneOutput | CompiledNonStandaloneParser<TZod>;
+export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: CompileOptions<boolean>): StandaloneOutput | CompiledNonStandaloneParser<TZod> {
 	const type = compilable(schema);
 
 	const verifierContext = factory.createIdentifier('ctx');
@@ -157,7 +161,10 @@ export function compile<TZod extends z.ZodTypeAny>(schema: TZod, options?: Compi
 	
 	const source = print(sourceFile);
 	const parser = new Function('input', 'ctx', source);
-	return standalone(parser as any, dependencies.dependencies);
+	return {
+		...standalone(parser as any, dependencies.dependencies),
+		schema
+	};
 }
 
 export interface TypesOptions {
