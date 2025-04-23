@@ -1,6 +1,6 @@
 {
 	"name": "zod-compiler",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Compile Zod schemas to fast parsers or TypeScript types",
 	"author": "Carson M. <carson@pyke.io>",
 	"license": "MIT OR Apache-2.0",
